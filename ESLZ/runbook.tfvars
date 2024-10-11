@@ -2,14 +2,13 @@ runbooks = {
 
     runbook1={
         resource_group          = "Project"
-        automation_account_name = "testken1024"
         log_verbose             = false
         log_progress            = false
         description             = "Description of Runbook"
         runbook_type            = "PowerShell"
 
         datafile={
-            file_path ="./runbooks/runbook.ps1"
+            file_path ="./runbook/runbook.ps1"
         }
         # publish_content_link = {
         #     uri     = "https://example.com/runbook.ps1"
@@ -22,7 +21,7 @@ runbooks = {
 
         # draft ={
         #     edit_mode_enabled = true
-        #     output_types      = ["PowerShell"]
+        #     output_types      = ["String", "Error"]
         #     parameters ={
         #       param1 = {
         #         key       = "param1"
@@ -48,11 +47,5 @@ runbooks = {
         # }
 
 
-        # job_schedules ={
-        #    DailyRun={
-        #     parameters    = "{param1: 'value1', param2: 2}"
-        #     run_on = null
-        #    }
-        # }
     }
 }

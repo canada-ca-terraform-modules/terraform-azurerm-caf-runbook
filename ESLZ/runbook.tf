@@ -11,6 +11,17 @@ module "runbook" {
     env = var.env
     group = var.group
     project = var.project
+    automation_account_name = "example"
+    # job_schedules ={   # Optional schedule for runbook and the schedules need to be defined in automation account
+    #   daily={
+    #     parameters    = {param1: "value1", param2: 2} #optional parameters for runbook
+    #     run_on = null
+    #   }
+    #   monthly={
+    #     parameters    = {param1: "value1", param2: 2}
+    #     run_on = null
+    #   }
+    # }
     userDefinedString = each.key
     runbook= each.value
     resource_groups = local.resource_groups_all

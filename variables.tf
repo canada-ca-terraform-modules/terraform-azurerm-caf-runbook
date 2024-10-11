@@ -35,9 +35,20 @@ variable "userDefinedString" {
 }
 
 
+variable "automation_account_name" {
+  description = "(Required) Name of automation account."
+  type        = string
+  default     = null
+}
 
-
-
+variable "job_schedules" {
+  description = "Map of job schedules with their parameters and settings."
+  type = map(object({
+    parameters = map(any)  # Allow `parameters` to hold complex nested structures
+    run_on     = string
+  }))
+  default = {}
+}
 
 variable "runbook" {
   description = "(Required) Runbook configuration."

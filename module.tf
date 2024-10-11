@@ -7,7 +7,7 @@ resource "azurerm_automation_runbook" "runbook" {
   name                    = local.runbook-name
   location                = var.location
   resource_group_name     = local.resource_group_name
-  automation_account_name = var.runbook.automation_account_name
+  automation_account_name = var.automation_account_name
   log_verbose             = try(var.runbook.log_verbose, false)
   log_progress            = try(var.runbook.log_progress, false)
   description             = var.runbook.description
@@ -57,12 +57,16 @@ resource "azurerm_automation_runbook" "runbook" {
     }
   }
 
-  dynamic "job_schedule" {
-    for_each = try(var.runbook.job_schedules,{})
-    content {
-      schedule_name = job_schedule.key
-      parameters    = try(job_schedule.parameters, null)
-      run_on        = try(job_schedule.run_on, null)
-    }
-  }
 }
+
+resource "azurerm_automation_job_schedule" "job_schedule" {
+  for_each = try(var.job_schedules,{})
+
+  automation_account_name = var.automation_account_name
+  runbook_name            = local.runbook-name
+  schedule_name           = each.key
+  parameters    = try(each.value.parameters, null)
+  run_on        = try(each.value.run_on, null)
+  resource_group_name     = local.resource_group_name
+}
+
