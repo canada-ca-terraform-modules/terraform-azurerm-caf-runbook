@@ -4,25 +4,32 @@ data "local_file" "runbook_script" {
 }
 
 resource "azurerm_automation_runbook" "runbook" {
-  name                    = local.runbook-name
-  location                = var.location
-  resource_group_name     = local.resource_group_name
-  automation_account_name = var.automation_account_name
-  log_verbose             = try(var.runbook.log_verbose, false)
-  log_progress            = try(var.runbook.log_progress, false)
-  description             = var.runbook.description
-  runbook_type            = var.runbook.runbook_type
+  name                     = try(var.runbook.name, local.runbook-name)
+  location                 = var.location
+  resource_group_name      = local.resource_group_name
+  automation_account_name  = var.automation_account_name
+  log_verbose              = try(var.runbook.log_verbose, false)
+  log_progress             = try(var.runbook.log_progress, false)
+  description              = try(var.runbook.description, null)
+  runbook_type             = var.runbook.runbook_type
+  tags                     = merge(var.tags, try(var.runbook.tags, {}))
+  runtime_environment_name = try(var.runbook.runtime_environment_name, null)
+  log_activity_trace_level = try(var.runbook.log_activity_trace_level, null)
 
-  content = try(data.local_file.runbook_script[0].content, null)  
+  content = try(data.local_file.runbook_script[0].content, null)
 
   dynamic "publish_content_link" {
     for_each = try(var.runbook.publish_content_link, null) != null ? [1] : []
     content {
       uri     = var.runbook.publish_content_link.uri
       version = try(var.runbook.publish_content_link.version, null)
-      hash {
-        algorithm = var.runbook.publish_content_link.hash.algorithm
-        value     = var.runbook.publish_content_link.hash.value
+
+      dynamic "hash" {
+        for_each = try(var.runbook.publish_content_link.hash, null) != null ? [1] : []
+        content {
+          algorithm = var.runbook.publish_content_link.hash.algorithm
+          value     = var.runbook.publish_content_link.hash.value
+        }
       }
     }
   }
@@ -32,26 +39,26 @@ resource "azurerm_automation_runbook" "runbook" {
     content {
       edit_mode_enabled = try(var.runbook.draft.edit_mode_enabled, false)
       content_link {
-          uri     = var.runbook.draft.content_link.uri
-          version = try(var.runbook.draft.content_link.version, null)
+        uri     = var.runbook.draft.content_link.uri
+        version = try(var.runbook.draft.content_link.version, null)
         dynamic "hash" {
-          for_each = try(var.runbook.draft.hash, [])
+          for_each = try(var.runbook.draft.content_link.hash, null) != null ? [1] : []
           content {
             algorithm = var.runbook.draft.content_link.hash.algorithm
             value     = var.runbook.draft.content_link.hash.value
           }
         }
       }
-      output_types      = try(var.runbook.draft.output_types, "")
+      output_types = try(var.runbook.draft.output_types, "")
 
       # Nested dynamic block for parameters list
       dynamic "parameters" {
-        for_each = try(var.runbook.draft.parameters, {})  # Iterate through the list of parameters
+        for_each = try(var.runbook.draft.parameters, {}) # Iterate through the list of parameters
         content {
-          key       = try(parameters.value.key, null)      # Use the dynamic value for the parameter key
-          type      = try(parameters.value.type, null)     # Parameter type (string, int, etc.)
+          key       = try(parameters.value.key, null)  # Use the dynamic value for the parameter key
+          type      = try(parameters.value.type, null) # Parameter type (string, int, etc.)
           mandatory = try(parameters.value.mandatory, false)
-          position  = try(parameters.value.position, 0)  # Position of the parameter
+          position  = try(parameters.value.position, 0) # Position of the parameter
         }
       }
     }
@@ -60,13 +67,13 @@ resource "azurerm_automation_runbook" "runbook" {
 }
 
 resource "azurerm_automation_job_schedule" "job_schedule" {
-  for_each = try(var.job_schedules,{})
+  for_each = try(var.job_schedules, {})
 
   automation_account_name = var.automation_account_name
   runbook_name            = local.runbook-name
   schedule_name           = each.key
-  parameters    = try(each.value.parameters, null)
-  run_on        = try(each.value.run_on, null)
+  parameters              = try(each.value.parameters, null)
+  run_on                  = try(each.value.run_on, null)
   resource_group_name     = local.resource_group_name
 }
 

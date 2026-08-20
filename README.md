@@ -1,3 +1,57 @@
+# terraform-azurerm-caf-runbook
+
+Terraform CAF module that manages an Azure Automation Runbook
+(`azurerm_automation_runbook`) and its optional job schedules
+(`azurerm_automation_job_schedule`).
+
+## Usage
+
+### ESLZ module block (`ESLZ/runbook.tf`)
+
+```hcl
+module "runbook" {
+  for_each                 = var.runbooks
+  source                   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-runbook?ref=v1.0.0"
+  location                 = var.location
+  env                      = var.env
+  group                    = var.group
+  project                  = var.project
+  automation_account_name  = "example"
+  tags                     = var.tags
+  userDefinedString        = each.key
+  runbook                  = each.value
+  resource_groups          = local.resource_groups_all
+}
+```
+
+### ESLZ tfvars pattern (`ESLZ/runbook.tfvars`)
+
+```hcl
+runbooks = {
+  runbook1 = {
+    resource_group = "Project"
+    log_verbose    = false
+    log_progress   = false
+    description    = "Description of Runbook"
+    runbook_type   = "PowerShell"
+
+    datafile = {
+      file_path = "./runbook/runbook.ps1"
+    }
+  }
+}
+```
+
+## Testing
+
+```bash
+terraform fmt -recursive && terraform init -backend=false && terraform validate && terraform test
+```
+
+## CI
+
+GitHub Actions workflow at `.github/workflows/terraform-ci.yml` runs fmt, init, validate, test, and tflint on every PR.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

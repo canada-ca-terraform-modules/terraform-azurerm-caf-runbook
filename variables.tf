@@ -1,37 +1,39 @@
 variable "location" {
   description = "Azure location for the VM"
-  type = string
-  default = "canadacentral"
+  type        = string
+  default     = "canadacentral"
 }
 
 variable "tags" {
   description = "Tags that will be applied to every associated VM resource"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "env" {
   description = "(Required) 4 character string defining the environment name prefix for the VM"
-  type = string
-  default =  "dev"
+  type        = string
+  default     = "dev"
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "group" {
   description = "(Required) Character string defining the group for the target subscription"
-  type = string
-  default = "test"
+  type        = string
+  default     = "test"
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "project" {
   description = "(Required) Character string defining the project for the target subscription"
-  type = string
-  default = "test"
+  type        = string
+  default     = "test"
 }
 
 variable "userDefinedString" {
   description = "(Required) User defined portion value for the name of the VM."
-  type = string
-  default= "test"
+  type        = string
+  default     = "test"
 }
 
 
@@ -44,7 +46,7 @@ variable "automation_account_name" {
 variable "job_schedules" {
   description = "Map of job schedules with their parameters and settings."
   type = map(object({
-    parameters = map(any)  # Allow `parameters` to hold complex nested structures
+    parameters = map(any) # Allow `parameters` to hold complex nested structures
     run_on     = string
   }))
   default = {}
@@ -58,8 +60,8 @@ variable "runbook" {
 
 variable "resource_groups" {
   description = "(Required) Resource group object for the VM"
-  type = any
-  default = {}
+  type        = any
+  default     = {}
 }
 
 
