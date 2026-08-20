@@ -55,14 +55,18 @@ GitHub Actions workflow at `.github/workflows/terraform-ci.yml` runs fmt, init, 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 5.0 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | ~> 2.9 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 5.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | ~> 2.9 |
 
 ## Modules
 
@@ -83,7 +87,7 @@ No modules.
 | <a name="input_automation_account_name"></a> [automation\_account\_name](#input\_automation\_account\_name) | (Required) Name of automation account. | `string` | `null` | no |
 | <a name="input_env"></a> [env](#input\_env) | (Required) 4 character string defining the environment name prefix for the VM | `string` | `"dev"` | no |
 | <a name="input_group"></a> [group](#input\_group) | (Required) Character string defining the group for the target subscription | `string` | `"test"` | no |
-| <a name="input_job_schedules"></a> [job\_schedules](#input\_job\_schedules) | Map of job schedules with their parameters and settings. | <pre>map(object({<br>    parameters = map(any)  # Allow `parameters` to hold complex nested structures<br>    run_on     = string<br>  }))</pre> | `{}` | no |
+| <a name="input_job_schedules"></a> [job\_schedules](#input\_job\_schedules) | Map of job schedules with their parameters and settings. | <pre>map(object({<br/>    parameters = map(any) # Allow `parameters` to hold complex nested structures<br/>    run_on     = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_location"></a> [location](#input\_location) | Azure location for the VM | `string` | `"canadacentral"` | no |
 | <a name="input_project"></a> [project](#input\_project) | (Required) Character string defining the project for the target subscription | `string` | `"test"` | no |
 | <a name="input_resource_groups"></a> [resource\_groups](#input\_resource\_groups) | (Required) Resource group object for the VM | `any` | `{}` | no |
