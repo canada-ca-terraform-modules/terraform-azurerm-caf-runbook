@@ -1,5 +1,5 @@
 terraform {
-  # no-op: touch this file so the live-test.yml `paths` filter picks up this PR
+  # no-op: verification run for the live-test conversion (post config/*.tfvars fix)
   required_version = ">= 1.9"
   required_providers {
     azurerm = {
